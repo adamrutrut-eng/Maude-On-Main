@@ -17,26 +17,53 @@ they are today.
 | Jewelry & gifts, Our story, Visit | Store copy, brands carried, address, hours, map and directions. The still life in "Our story" was generated with Higgsfield (GPT Image) to match the logo palette; every product photo is the store's own. |
 | Newsletter | Posts to the Shopify customer form, so subscribers land in the store's customer list. |
 
-## Deploying on Netlify
+## Deploying on Netlify and pointing the domain
 
 1. Create a new site from this GitHub repository.
 2. Leave the build command empty and set the publish directory to `.` (both are already declared in
    `netlify.toml`).
 3. Deploy. Netlify serves the repository root as-is.
 
-Once the site has its final domain, set the `og:image` meta tag in `index.html` to the absolute URL of
-`assets/img/og-image.jpg` so link previews on Facebook and Instagram pick it up.
+`maudeonmain.com` is currently the Shopify store itself, so the store moves to
+`shop.maudeonmain.com` and the landing page takes over the main domain. The step-by-step DNS and
+Shopify changes, in the order that keeps everything online, are in
+[docs/DOMAIN-SETUP.md](docs/DOMAIN-SETUP.md). `netlify.toml` permanently redirects every old
+storefront URL (`/products/*`, `/collections/*`, `/cart`, and so on) to the store's new address, so
+links shared before the move keep working.
 
-## Keeping products fresh
+## Keeping inventory honest
 
-```bash
-node scripts/sync-shopify.mjs            # pulls the "just-in" collection (default)
-node scripts/sync-shopify.mjs bestsellers 8
-```
+Nothing on the page should lead a shopper to a sold-out product or an empty collection. Three
+layers keep it that way:
 
-The script reads the store's public `products.json`, keeps only in-stock products that have photos,
-and rewrites the product cards between the `shopify:arrivals` markers in `index.html`. Commit the
-result and Netlify redeploys. Requires Node 18 or newer.
+1. **The sync script** reads the store's public product JSON and rewrites four blocks in
+   `index.html`: the product cards (in-stock items only, with price, sale price and the sizes
+   actually left), the collection quick links and footer links (only collections with something to
+   buy), and the jewelry collage (three in-stock pieces, each linked to its product). It also points
+   every store link at the `STORE` domain set at the top of the script, and warns if one of the four
+   large tiles has nothing in stock.
+
+   ```bash
+   node scripts/sync-shopify.mjs            # arrivals from the "just-in" collection (default)
+   node scripts/sync-shopify.mjs bestsellers 8
+   ```
+
+2. **A scheduled GitHub Action** (`.github/workflows/sync-shopify.yml`) runs that script every six
+   hours on the default branch and commits when anything changed, which makes Netlify redeploy.
+   It can also be run on demand from the Actions tab.
+
+3. **A live check in the browser.** On Netlify, `/shopify/*` proxies the store's JSON same-origin
+   (Shopify sends no CORS headers), so `js/main.js` re-checks each card on page load and marks
+   anything that sold out since the last sync, and refreshes the sizes and price. Anywhere else the
+   request fails quietly and the cards stay as the last sync left them.
+
+### Store housekeeping worth doing in Shopify
+
+- The **Bestsellers**, **Coming Soon** and **Jackets + Outerwear** collections are empty and
+  **Shoes** and **Athleisure** are entirely sold out, so the page hides them. Either restock them or
+  turn them into automated collections with the condition *Inventory stock is greater than 0*.
+- The Haptics cardigan has the placeholder handle `untitled-mar16_18-49`; renaming its URL handle in
+  the product's SEO settings gives it a readable link.
 
 ## Replacing the hero video
 

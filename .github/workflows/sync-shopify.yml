@@ -1,0 +1,36 @@
+# Refreshes the landing page's products, quick links and jewelry collage from the
+# live Shopify store four times a day, so sold-out items and empty collections
+# drop off the page on their own. Netlify redeploys whenever this commits.
+name: Sync products from Shopify
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Pull in-stock products from the store
+        run: node scripts/sync-shopify.mjs | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit and push if the page changed
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git config user.name "shopify-sync[bot]"
+          git config user.email "shopify-sync@users.noreply.github.com"
+          git commit -am "Sync products from Shopify"
+          git push

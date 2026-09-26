@@ -3,6 +3,79 @@
   publish = "."
   command = ""
 
+# The Shopify store lives at shop.maudeonmain.com once maudeonmain.com points here.
+# Keep this in step with STORE in scripts/sync-shopify.mjs.
+
+# Live inventory lookups for the page's own JavaScript. Shopify sends no CORS
+# headers, so the browser reads the store's public JSON through this same-origin proxy.
+[[redirects]]
+  from = "/shopify/*"
+  to = "https://shop.maudeonmain.com/:splat"
+  status = 200
+  force = true
+
+# Storefront URLs that used to live on maudeonmain.com keep working after the domain
+# move: old Instagram posts, Google results and saved links land on the same product.
+[[redirects]]
+  from = "/products/*"
+  to = "https://shop.maudeonmain.com/products/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/collections/*"
+  to = "https://shop.maudeonmain.com/collections/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/collections"
+  to = "https://shop.maudeonmain.com/collections"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/*"
+  to = "https://shop.maudeonmain.com/pages/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blogs/*"
+  to = "https://shop.maudeonmain.com/blogs/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/policies/*"
+  to = "https://shop.maudeonmain.com/policies/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cart*"
+  to = "https://shop.maudeonmain.com/cart:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/account*"
+  to = "https://shop.maudeonmain.com/account:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout*"
+  to = "https://shop.maudeonmain.com/checkout:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/search*"
+  to = "https://shop.maudeonmain.com/search:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
