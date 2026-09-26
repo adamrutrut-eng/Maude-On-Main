@@ -24,11 +24,16 @@ they are today.
    `netlify.toml`).
 3. Deploy. Netlify serves the repository root as-is.
 
-That is all it takes: the site runs on Netlify's own address and every link goes to the Shopify
-store exactly as it is today. No DNS changes are needed.
+The site works immediately on Netlify's own address. Every product and collection link goes to the
+store's permanent Shopify address, `maude-on-main.myshopify.com`, the same way a Square landing page
+links to its `.square.site` store, so the links work before and after the domain switch.
 
-If, later, `maudeonmain.com` itself should show this page instead of the store, that is a separate
-project for whoever controls the domain's DNS: see [docs/DOMAIN-SETUP.md](docs/DOMAIN-SETUP.md).
+To put the page on `maudeonmain.com` itself, follow the three steps in
+[docs/DOMAIN-SETUP.md](docs/DOMAIN-SETUP.md) (release the domain in Shopify, two DNS records at
+GoDaddy, add the domain in Netlify).
+
+The newsletter form uses Netlify Forms: submissions appear under **Forms** in the Netlify
+dashboard, where email notifications can be switched on.
 
 ## Keeping inventory honest
 

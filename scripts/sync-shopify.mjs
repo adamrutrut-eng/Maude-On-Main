@@ -17,11 +17,11 @@ import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-/** The Shopify store's primary domain, used for every link. Change it here and re-run. */
-export const STORE = "https://maudeonmain.com";
-/** Where product data is read from: STORE when it resolves, otherwise the store's
- *  permanent Shopify address (used until the shop subdomain is live). */
-const FALLBACK_ORIGIN = "https://maude-on-main.myshopify.com";
+/** The Shopify store's permanent address, used for every link. Like a Square store's
+ *  .square.site address, it never changes, so the landing page can own maudeonmain.com. */
+export const STORE = "https://maude-on-main.myshopify.com";
+/** Product data is read from the same address (its JSON endpoints never redirect). */
+const FALLBACK_ORIGIN = STORE;
 let DATA_ORIGIN = STORE;
 
 const ARRIVALS_COLLECTION = process.argv[2] || "just-in";

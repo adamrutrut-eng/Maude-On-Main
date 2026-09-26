@@ -169,6 +169,13 @@
       .catch(function () { clearTimeout(timer); });
   }
 
+  /* Newsletter: Netlify Forms posts back to this page with ?subscribed=true */
+  if (/[?&]subscribed=true/.test(window.location.search)) {
+    var form = document.querySelector(".newsletter__form");
+    var thanks = document.querySelector(".newsletter__thanks");
+    if (form && thanks) { form.hidden = true; thanks.hidden = false; }
+  }
+
   /* Footer year */
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());

@@ -3,13 +3,72 @@
   publish = "."
   command = ""
 
+# The Shopify store lives at its permanent address, maude-on-main.myshopify.com
+# (same idea as a Square store's .square.site address). Keep it in step with
+# STORE in scripts/sync-shopify.mjs.
+
 # Live inventory lookups for the page's own JavaScript. Shopify sends no CORS
 # headers, so the browser reads the store's public JSON through this same-origin proxy.
-# Keep the store address in step with STORE in scripts/sync-shopify.mjs.
 [[redirects]]
   from = "/shopify/*"
-  to = "https://maudeonmain.com/:splat"
+  to = "https://maude-on-main.myshopify.com/:splat"
   status = 200
+  force = true
+
+# Once maudeonmain.com points here, storefront links shared before the switch
+# (old Instagram posts, Google results, saved links) still open the right page.
+[[redirects]]
+  from = "/products/*"
+  to = "https://maude-on-main.myshopify.com/products/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/collections/*"
+  to = "https://maude-on-main.myshopify.com/collections/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/collections"
+  to = "https://maude-on-main.myshopify.com/collections"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/*"
+  to = "https://maude-on-main.myshopify.com/pages/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/policies/*"
+  to = "https://maude-on-main.myshopify.com/policies/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cart*"
+  to = "https://maude-on-main.myshopify.com/cart:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/account*"
+  to = "https://maude-on-main.myshopify.com/account:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout*"
+  to = "https://maude-on-main.myshopify.com/checkout:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/search*"
+  to = "https://maude-on-main.myshopify.com/search:splat"
+  status = 301
   force = true
 
 [[headers]]
