@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 /** The Shopify store's primary domain, used for every link. Change it here and re-run. */
-export const STORE = "https://shop.maudeonmain.com";
+export const STORE = "https://maudeonmain.com";
 /** Where product data is read from: STORE when it resolves, otherwise the store's
  *  permanent Shopify address (used until the shop subdomain is live). */
 const FALLBACK_ORIGIN = "https://maude-on-main.myshopify.com";

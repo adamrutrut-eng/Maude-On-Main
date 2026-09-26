@@ -1,4 +1,9 @@
-# Pointing maudeonmain.com at the new site
+# Pointing maudeonmain.com at the new site (optional, for later)
+
+**Nothing here is needed to launch.** The site runs on Netlify's own address (`something.netlify.app`)
+with the Shopify store completely untouched, and every link on the page goes to the store as it is
+today. Only follow this page if, one day, `maudeonmain.com` itself should show the new landing page.
+That needs whoever controls the domain's DNS (GoDaddy, per the nameservers below).
 
 `maudeonmain.com` currently *is* the Shopify store, so the domain can't simply be repointed:
 a domain resolves to one host, and if it moves to Netlify the store has to live somewhere else.
@@ -68,18 +73,23 @@ They no longer point at Shopify and would otherwise show a "not connected" warni
 - Google Search Console: add `shop.maudeonmain.com` as a property so product pages keep being indexed.
 - Instagram and Facebook bios can stay on `maudeonmain.com`.
 
-## What keeps old links alive
+## Code changes to make on that day
 
-`netlify.toml` redirects every storefront path that used to live on `maudeonmain.com`
-(`/products/*`, `/collections/*`, `/pages/*`, `/cart`, `/account`, `/checkout`, `/search`, `/policies/*`,
-`/blogs/*`) to the same path on `shop.maudeonmain.com` with a permanent (301) redirect. A product link
-posted on Instagram two years ago still opens that product, and Google carries its ranking over.
+1. In `scripts/sync-shopify.mjs` set `STORE` to `https://shop.maudeonmain.com`, then run
+   `node scripts/sync-shopify.mjs` (it rewrites every store link in `index.html`).
+2. In `netlify.toml` change the `/shopify/*` proxy target to `https://shop.maudeonmain.com/:splat`
+   and add these rules, so storefront links that used to live on `maudeonmain.com` (old Instagram
+   posts, Google results, saved links) keep opening the right product:
 
-## If a different subdomain is wanted
+   ```toml
+   [[redirects]]
+     from = "/products/*"
+     to = "https://shop.maudeonmain.com/products/:splat"
+     status = 301
+     force = true
+   ```
 
-`shop.` is the convention, but anything works (`store.`, `boutique.`). Change it in three places and
-re-run the sync script:
+   Repeat the same block for `/collections/*`, `/pages/*`, `/blogs/*`, `/policies/*`, `/cart*`,
+   `/account*`, `/checkout*` and `/search*`.
 
-1. `STORE` in `scripts/sync-shopify.mjs`
-2. every `shop.maudeonmain.com` in `netlify.toml`
-3. `node scripts/sync-shopify.mjs` (rewrites every store link in `index.html`)
+`shop.` is the convention, but any subdomain works (`store.`, `boutique.`); use the same name everywhere.

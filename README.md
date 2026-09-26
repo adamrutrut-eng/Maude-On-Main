@@ -24,12 +24,11 @@ they are today.
    `netlify.toml`).
 3. Deploy. Netlify serves the repository root as-is.
 
-`maudeonmain.com` is currently the Shopify store itself, so the store moves to
-`shop.maudeonmain.com` and the landing page takes over the main domain. The step-by-step DNS and
-Shopify changes, in the order that keeps everything online, are in
-[docs/DOMAIN-SETUP.md](docs/DOMAIN-SETUP.md). `netlify.toml` permanently redirects every old
-storefront URL (`/products/*`, `/collections/*`, `/cart`, and so on) to the store's new address, so
-links shared before the move keep working.
+That is all it takes: the site runs on Netlify's own address and every link goes to the Shopify
+store exactly as it is today. No DNS changes are needed.
+
+If, later, `maudeonmain.com` itself should show this page instead of the store, that is a separate
+project for whoever controls the domain's DNS: see [docs/DOMAIN-SETUP.md](docs/DOMAIN-SETUP.md).
 
 ## Keeping inventory honest
 
