@@ -5,13 +5,16 @@ platform's own address. For Shopify that address is **maude-on-main.myshopify.co
 equivalent of a Square store's `.square.site` address). Every link on the page already goes there,
 so nothing in the code changes on switch day.
 
-Three steps, in this order. Nothing goes offline in between.
+Three steps, in this order, plus an optional tidy-up. Nothing goes offline in between.
 
-## 1. Shopify: let go of the domain
+## 1. Shopify: make the permanent address the primary one
 
-Shopify admin → **Settings → Domains** → click `maudeonmain.com` → **Remove**. Do the same for
-`www.maudeonmain.com` if it is listed. The store carries on at `maude-on-main.myshopify.com`, and
-Shopify stops bouncing that address to `maudeonmain.com`.
+Shopify admin → **Settings → Domains** → **Change primary domain** → choose
+`maude-on-main.myshopify.com`. Do **not** remove `maudeonmain.com` here yet: while DNS still points
+at Shopify, a removed domain shows an error page, whereas a non-primary one simply redirects to the
+store. After this step the store is fully working at `maude-on-main.myshopify.com`, and anyone typing
+`maudeonmain.com` is bounced there until step 2 happens. This step can be done any time, on its own,
+with only the Shopify login.
 
 ## 2. GoDaddy: two DNS records
 
@@ -31,6 +34,11 @@ Leave every MX and TXT record alone. They carry the shop's Microsoft 365 email.
 Netlify → your site → **Domain management → Add a domain** → `maudeonmain.com`, then add
 `www.maudeonmain.com` and set `maudeonmain.com` as primary. Netlify issues the HTTPS certificate
 itself once the DNS change has spread (minutes to a few hours).
+
+## 4. Shopify tidy-up (only after step 2 has taken effect)
+
+Shopify admin → **Settings → Domains** → remove `maudeonmain.com` and `www.maudeonmain.com`. By now
+they point at Netlify, so Shopify would otherwise flag them as "not connected" forever. Optional.
 
 ## What happens to old links
 
